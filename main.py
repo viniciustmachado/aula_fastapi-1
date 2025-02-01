@@ -1,11 +1,22 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import FastAPI, status, HTTPException, Depends
 from pydantic import BaseModel
 from enum import Enum
+import logging
+
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(asctime)s: %(message)s')
+logger = logging.getLogger("fastapi")
 
 
 class NomeGrupo(str, Enum):
     operacoes = "Operações matemáticas simples enum"
     teste = "Teste"
+
+
+API_TOKEN = 123
+
+def commom_verificacao_api_token(api_token: int):
+    if api_token != API_TOKEN:
+        raise HTTPException(status_code=401, detail="Token inválido")
 
 
 description = f"""
@@ -29,7 +40,7 @@ app = FastAPI(
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     },
-
+    dependencies=[Depends(commom_verificacao_api_token)]
 )
 
 
@@ -41,22 +52,25 @@ def hello_world():
     return {"mensagem": "Deu certo"}
 
 
-API_TOKEN = 123
 
 # Criando um endpoint para receber dois números e retornar a soma
-@app.post("/soma/{numero1}/{numero2}/{api_token}", tags=[NomeGrupo.operacoes])
-def soma(numero1: int, numero2: int, api_token: int):
+@app.post("/soma/{numero1}/{numero2}", tags=[NomeGrupo.operacoes])
+def soma(numero1: int, numero2: int):
     
-    if api_token != API_TOKEN:
-        raise HTTPException(status_code=401, detail="API Token inválido")
-    
+    logger.info(f"Requisição recebida, parâmetros numero1={numero1}, numero2={numero2}")
+
+    logger.info("Verificando se algum número é negativo")
     if numero1 < 0 or numero2 < 0:
+        logger.error("Não é permitido números negativos")
         raise HTTPException(status_code=400, detail="Não é permitido números negativos")
     
     total = numero1 + numero2
     
     if total < 0:
+        logger.error("Resultado negativo")
         raise HTTPException(status_code=400, detail="Resultado negativo")
+    
+    logger.info(f"Requisição processada com sucesso. Resultado: {total}")
     
     return {"resultado": total, "warning": "Esta versão será descontinuada em 30 dias"}
 
@@ -71,7 +85,6 @@ def soma_formato2(numero1: int, numero2: int):
 class Numero(BaseModel):
     numero1: int
     numero2: int
-    numero3: int = 0
     
 class Resultado(BaseModel):
     resultado: int
@@ -83,11 +96,6 @@ def soma_formato3(numero: Numero):
 
 
 
-
-def checar_creditos(id_usuario: int):
-    return False
-
-
 @app.post("/divisao/{numero1}/{numero2}", tags=[NomeGrupo.operacoes])
 def divisao(numero1: int, numero2: int):
     
@@ -95,5 +103,30 @@ def divisao(numero1: int, numero2: int):
         raise HTTPException(status_code=400, detail="Não é permitido divisão por zero")
         
     total = numero1 / numero2
+    
+    return {"resultado": total}
+
+
+class TipoOperacao(str, Enum):
+    soma = "soma"
+    subtracao = "subtracao"
+    multiplicacao = "multiplicacao"
+    divisao = "divisao"
+
+
+@app.post("/operacao", tags=[NomeGrupo.operacoes])
+def operacao(numero: Numero, tipo: TipoOperacao):
+    
+    if tipo == TipoOperacao.soma:
+        total = numero.numero1 + numero.numero2
+    
+    elif tipo == TipoOperacao.subtracao:
+        total = numero.numero1 - numero.numero2
+    
+    elif tipo == TipoOperacao.multiplicacao:
+        total = numero.numero1 * numero.numero2
+    
+    elif tipo == TipoOperacao.divisao:
+        total = numero.numero1 / numero.numero2
     
     return {"resultado": total}
