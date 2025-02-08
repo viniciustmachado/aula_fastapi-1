@@ -29,6 +29,6 @@ app = FastAPI(
 )
 
 
-app.include_router(llm_router.router)
-app.include_router(operacoes_router.router)
+app.include_router(llm_router.router, prefix="/llm")
+app.include_router(operacoes_router.router, prefix="/operacoes")
 
