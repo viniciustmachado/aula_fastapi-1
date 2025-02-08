@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from utils import obter_logger_e_configuracao, executar_prompt
 
 

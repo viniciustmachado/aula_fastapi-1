@@ -90,7 +90,7 @@ def divisao(numero1: int, numero2: int):
 )
 def operacao(numero: Numero, tipo: TipoOperacao):
     if tipo == TipoOperacao.soma:
-        total = numero.numero1 + numero.numero2 -
+        total = numero.numero1 + numero.numero2
 
     elif tipo == TipoOperacao.subtracao:
         total = numero.numero1 - numero.numero2
