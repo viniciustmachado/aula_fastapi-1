@@ -1,5 +1,5 @@
 import logging
-from fastapi import FastAPI, status, HTTPException
+from fastapi import HTTPException
 from groq import Groq
 import os
 from dotenv import load_dotenv
@@ -63,4 +63,3 @@ def executar_prompt(tema: str):
     )
 
     return chat_completion.choices[0].message.content
-

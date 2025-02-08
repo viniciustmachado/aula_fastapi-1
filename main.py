@@ -5,7 +5,7 @@ from routers import llm_router, operacoes_router
 
 description = """
     API desenvolvida durante a aula 2, contendo endpoints de exemplo e soma
-    
+
     - /teste: retorna uma mensagem de sucesso
     - /soma/numero1/numero2: recebe dois números e retorna a soma
 """
@@ -31,4 +31,3 @@ app = FastAPI(
 
 app.include_router(llm_router.router, prefix="/llm")
 app.include_router(operacoes_router.router, prefix="/operacoes")
-

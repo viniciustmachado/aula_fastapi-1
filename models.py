@@ -10,6 +10,7 @@ class NomeGrupo(str, Enum):
         operacoes (str): Retorna o nome do grupo de operações matemáticas simples.
         teste (str): Retorna o nome do grupo de teste.
     """
+
     operacoes = "Operações matemáticas simples"
     teste = "Teste"
 
@@ -24,6 +25,7 @@ class TipoOperacao(str, Enum):
         multiplicacao (str): Representa a operação de multiplicação.
         divisao (str): Representa a operação de divisão.
     """
+
     soma = "soma"
     subtracao = "subtracao"
     multiplicacao = "multiplicacao"
@@ -38,6 +40,7 @@ class Numero(BaseModel):
         numero1 (int): Primeiro número inteiro.
         numero2 (int): Segundo número inteiro.
     """
+
     numero1: int
     numero2: int
 
@@ -49,5 +52,5 @@ class Resultado(BaseModel):
     Atributos:
         resultado (int): O valor do resultado.
     """
-    resultado: int
 
+    resultado: int

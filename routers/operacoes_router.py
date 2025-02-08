@@ -1,4 +1,3 @@
-
 from fastapi import HTTPException, status, APIRouter
 from models import NomeGrupo, Resultado, Numero, TipoOperacao
 from utils import obter_logger_e_configuracao
@@ -23,7 +22,8 @@ def hello_world():
 @router.post(
     "/soma/{numero1}/{numero2}",
     tags=[NomeGrupo.operacoes],
-    summary="Recebe dois números na url e retorna a soma",)
+    summary="Recebe dois números na url e retorna a soma",
+)
 def soma(numero1: int, numero2: int):
     logger.info(f"Requisição recebida, parâmetros numero1={numero1}, numero2={numero2}")
 
@@ -44,11 +44,11 @@ def soma(numero1: int, numero2: int):
 
 # Formato 2: recebendo os números no corpor da requisição
 @router.post(
-    "/soma/v2", 
+    "/soma/v2",
     tags=[NomeGrupo.operacoes],
     summary="Recebe dois números no corpo da requisição e retorna a soma",
     response_model=Resultado,
-    )
+)
 def soma_formato2(numero1: int, numero2: int):
     total = numero1 + numero2
     logger.info(f"Resultado da operação: {total}")
@@ -69,10 +69,10 @@ def soma_formato3(numero: Numero):
 
 
 @router.post(
-    "/divisao/{numero1}/{numero2}", 
+    "/divisao/{numero1}/{numero2}",
     tags=[NomeGrupo.operacoes],
     summary="Recebe dois números na url e retorna a divisão",
-    )
+)
 def divisao(numero1: int, numero2: int):
     if numero2 == 0:
         raise HTTPException(status_code=400, detail="Não é permitido divisão por zero")
@@ -84,10 +84,10 @@ def divisao(numero1: int, numero2: int):
 
 
 @router.post(
-    "/operacao", 
+    "/operacao",
     tags=[NomeGrupo.operacoes],
     summary="Recebe dois números e o tipo de operação e retorna o resultado",
-    )
+)
 def operacao(numero: Numero, tipo: TipoOperacao):
     if tipo == TipoOperacao.soma:
         total = numero.numero1 + numero.numero2
@@ -100,6 +100,6 @@ def operacao(numero: Numero, tipo: TipoOperacao):
 
     elif tipo == TipoOperacao.divisao:
         total = numero.numero1 / numero.numero2
-    
+
     logger.info(f"Resultado da operação: {total}")
     return {"resultado": total}
