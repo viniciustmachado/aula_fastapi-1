@@ -9,6 +9,8 @@ load_dotenv()
 
 API_TOKEN = int(os.getenv("API_TOKEN"))
 
+postgres_password = 'password2025'
+
 
 def obter_logger_e_configuracao():
     """
