@@ -4,7 +4,7 @@ from routers import llm_router, operacoes_router
 
 
 description = """
-    API desenvolvida durante a aula 4, contendo endpoints de exemplo e soma
+    API desenvolvida durante a aula 2, contendo endpoints de exemplo e soma
 
     - /teste: retorna uma mensagem de sucesso
     - /soma/numero1/numero2: recebe dois números e retorna a soma
@@ -12,7 +12,7 @@ description = """
 
 
 app = FastAPI(
-    title="API da Aula 4",
+    title="API da Aula 3",
     description=description,
     version="0.1",
     terms_of_service="http://example.com/terms/",
