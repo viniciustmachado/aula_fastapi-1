@@ -12,7 +12,7 @@ router = APIRouter()
     "/teste",
     summary="Retorna mensagem de teste",
     description="Retorna uma mensagem de exemplo para testar e verificar se deu certo",
-    tags=[NomeGrupo.teste],
+    tags=[NomeGrupo.teste]
 )
 def hello_world():
     return {"mensagem": "Deu certo"}
