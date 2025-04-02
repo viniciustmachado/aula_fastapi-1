@@ -9,7 +9,7 @@ description = """
     - /teste: retorna uma mensagem de sucesso
     - /soma/numero1/numero2: recebe dois números e retorna a soma
 """
-
+ 
 
 app = FastAPI(
     title="API da Aula 3",
