@@ -180,3 +180,17 @@ um colego mencionou uma alterantiva semelhante ao pre commit que é o pre push. 
 ensinou sobre github actions, que sao automaçoes que voce coloca para rodar direto no github, pra evitar que subam coisas la fora do padrao desejado (ex: dev desinstalou o pre commit na sua maquina, e subiu zoado)
 pra isso, tem que ter uma pasta no projeto chamada ".github", e dentro dela uma pasta "workflows". Dentro da pasta workflows, tem os arquivos com as configuracoes das action que deve ser feito a cada novo commit na main.
 ---
+TRATAMENTO DE ERROS: essa parte do raise que tem um detail é uma especie de tratamento de erro. importante ter sempre.
+
+@router.post("/divisao/{numero1}/{numero2}", tags=[NomeGrupo.operacoes])
+def divisao(numero1: int, numero2: int):
+    logger.info(f"Requisição recebida (divisao), numero1={numero1}, numero2={numero2}")
+
+    if numero2 == 0:
+        logger.error("ERRO: Tentativa de divisão por zero")
+        raise HTTPException(status_code=400, detail="Não é permitido divisão por zero")
+
+    total = numero1 / numero2
+    logger.info(f"Requisição processada com sucesso (divisao). Resultado: {total}")
+
+    return {"resultado": total}
