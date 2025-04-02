@@ -1,0 +1,182 @@
+Pegue essa estrutura de projeto e me explique porque as coisas foram feitas, de acordo com as boas praticas.
+
+exemplos: porque criou uma pasta routers, porque dividiu cada uma delas, poque criou um models.py, porque criou um utils.py.
+
+Explique tudo isso levando em consideração o que está no código de cada arquivo e como cada um deles se relaciona com o main.py
+
+------
+
+explique como é feita a chamada e o import para usar codigos de outros arquivos, tipo o import token na main, chamando utils.py
+
+----
+um colega mencionou que costuma criar um arquivo settings e colocar coisas de variaveis de ambiente dentro disso, no padrao em caixa alta e importa isso, e isso parece ser uma boa pratica. nao entendi muito bem
+tipo usando um import settings
+----
+antes ele usava @app.get, depois incluiu um import APIROUTER e passou a chamar de outro modo, router = APIRouter e depois router.get. nao entendi bem o porque. tambem teve que declarar essa rota na main, nao entendi
+
+-----
+
+USANDO http://localhost:8000/docs E http://localhost:8000/redoc, podemos ver a documentação e realizar testes
+
+----
+segundo o professor, é uma boa pratica do apirouter que sempre que você for criar uma nova rota, nomeie de acordo com o objetivo dela e finalize com _router (exemplo llm_router) e o mesmo vale para as models (exemplo: llm_model)
+----
+uma vantagem é que se você ainda estiver desenvolvendo uma rota, ela nao ira aparecer na documentacao (/docs), somente a partir do momento em que você declarar na main.py (exemplo: app.include_router(llm_router.router))
+----
+também falou que uma boa pratica no arquivo models.py é deixar agrupadas as classes que são Models e classes que são enum. Não entendi direito pq não entendi bem o que é model e enum.
+----
+Documentação: e eu comentar a seguinte parte desse codigo abaixo, parece que o sistema vai puxar o texto entre tres aspas como documentação automática:
+@router.post("
+    /gerar_historia",
+    # summary="Gera uma história com base no tema informado por parâmetro",
+    # description="Gera uma história com base no tema informado por parâmetro"
+    )
+def gerar_historia(tema: str):
+    """
+    Gera uma história baseada no tema fornecido.
+
+    Args:
+        tema (str): O tema para a história.
+
+    Returns:
+        dict: Um dicionário contendo a história gerada.
+    """
+    logger.info(f"Tema informado: {tema}")
+    historia = executar_prompt(tema)
+    logger.info(f"História gerada: {historia}")
+    return {"historia": historia}
+
+-----
+demonstrou a aplicação "ruff", que organiza o codigo com o comando ruff format e ruff check. bem util.
+---
+atalho para o copilot é control + ".", e usa /doc e escreve em pt-br para gerar documentacao do trecho de codigo selecionado.
+---
+o titulo do commit deve ser sempre a alteração que foi feita, para facilitar
+Conventional Commits Pattern
+O que é, para que serve e como utilizamos dentro da LinkApi
+https://medium.com/linkapi-solutions/conventional-commits-pattern-3778d1a1e657
+--
+explicou que o arquivo .env.sample é uma boa pratica para commit, pois quem baixar pra uar futuramente abe xatamente quais dados precisa preencher nas variaveis de ambiente
+---
+ensinou a usar o github desktop enquanto o visual studio esta aberto, pois a gente vai fazendo commit por ali. Na verdade ele abriu a passta pelo github desktop, e la pediu pra abrir a pasta no vscode.. dai foi editando no vs code e la ja ficava sincronizado, pra ja commitar sempre que quiser.
+---
+falou sobre git flow para organização das branches, que é recomendacoes pra quando tem mais de um desenvolvedor trabalahndo. nem sei o que é branch ainda.
+---
+entender o que é pull request
+----
+ler o .md de boas praticas do professor.
+----
+na arvore de projetos/arquivos da pasta no explorer do vscode , quando o arquivo esta em um cinza claro, significa que ele está sendo ignorado pelo git no .gitignore.
+---
+colocando o prefixo na main, vc muda a url
+
+app.include_router(llm_router.router, prefix="/llm")
+app.include_router(operacoes_router.router, prefix="/operacoes")
+
+---
+na pasta do projeto (aula_fastapi), nós temos vários arquivos. Porém, os unicos que tem codigo sao:
+utils.py, main.py, models.py e todos os arquivos dentro da pasta "routers"
+uma das solucoes de boas praticas sugeridas é a criaçao de uma pasta "source" (src) e arrastar esses 3 arquivo e a pasta routers pra dentro dessa src.
+---
+quando eu coloco response_model=Resultado, eu forço o tipo de retorno que quero no return.
+
+@router.post(
+    "/soma/v2",
+    tags=[NomeGrupo.operacoes],
+    summary="Soma dois números no corpo da requisição e retorna a soma",
+    description="Soma dois números",
+    response_model=Resultado,
+)
+def soma_formato2(numero1: int, numero2: int):
+    logger.info(
+        f"Requisição recebida (soma_formato2), numero1={numero1}, numero2={numero2}"
+    )
+
+    total = numero1 + numero2
+    logger.info(
+        f"Requisição processada com sucesso (soma_formato2). Resultado: {total}"
+    )
+
+    return {"resultado": total}
+
+
+TBM PODERIA TER USADO return Resultado(resultado=total)
+-----
+entender o que é poetry e docker. quando falou sobre registrar a versao do python no readme, falou que nesses dois já estaria essa informação em ambiente de producao.
+---
+precisa dar essa linha de comando no terminal pra conseguir instalar a venv quando é ubuntu.
+Instale o ambiente virtual
+a. Primeiro é necessário rodar o comando: (roda dentro da pasta clonada - ex: aula_fastapi)
+ubuntu@ip-172-26-13-214:~/aula_fastapi$  sudo add-apt-repository ppa:deadsnakes/ppa
+
+■ sudo add-apt-repository ppa:deadsnakes/ppa
+b. Instale o venv no Ubuntu:
+essse aqui tbm na mesma pasta
+
+■ sudo apt install python3.12-venv
+
+c. Crie o ambiente virtual:
+roda tbmb na mesma pasta
+■ python3 -m venv venv
+
+após, digita um "ls" pra confirmar se aparece a venv
+
+d. Ative o ambiente virtual
+no linux, a forma de ativar é diferente:
+
+■ source venv/bin/activate
+
+
+pelo que entendi, essa é a forma manual de fazer. No dia a dia, parece que utilizam docker, que faz tudo isso automatico. Nao entendi como.
+
+Instale as bibliotecas
+a. pip install -r requirements.txt
+2. Crie o arquivo .env com base no arquivo .env.sample
+a. cp .env.sample .env
+b. Edite o arquivo: nano .env   (nano é um editor de texto. )
+
+c. Adicione o token do groq na variável
+
+Edita, APERTA CONTROL X e depois Y (yes)
+
+depois digita cat .env, QUE ELE VAI MOSTRAR O CONTEUDO NO terminal, só pra confirmar
+
+3. Execute a aplicação
+a. fastapi run main.py
+4. Pronto, sua API está no ar
+
+Precisa liberar a porta 8000 no firewall(Aplications: custom, protocolo TCP) , nas configurações.
+tem como liberar portas apenas para ips especificos.
+
+
+entra no navegador e digita http://98.83.162.77:8000/docs   -> é pra entrar na documentacao.
+----
+essa forma que fizemos deploy não é a ideal, ,pois nela a API só funciona enqunto o terminal na maquina virtual estiver aberto.
+uma forma alternativa para rodar é o nohup.
+
+(venv) ubuntu@ip-172-26-12-114:~/aula_fastapi$ nohup fastapi run main.py
+nohup: ignoring input and appending output to 'nohup.out'
+^[[A^C
+(venv) ubuntu@ip-172-26-12-114:~/aula_fastapi$ nohup fastapi run main.py > /home/ubuntu/api.log
+nohup: ignoring input and redirecting stderr to stdout
+
+-----
+ensinou a usar o pre commit ndo pre-commit.com
+
+Ao clonar o repositório pela primeira vez, instale e configure o pre-commit no seu ambiente local:
+
+pip install pre-commit
+pre-commit install
+Para executar o pre-commit manualmente em todos os arquivos:
+
+
+esse pre commit eh feito automaticamente, mas posso fazer manual:
+pre-commit run --all-files
+
+eses pip são dentro da venv.
+-----
+um colego mencionou uma alterantiva semelhante ao pre commit que é o pre push. depois tem que entender melhor a diferenca, parace que rodam em camadas diferentes.
+---
+ensinou sobre github actions, que sao automaçoes que voce coloca para rodar direto no github, pra evitar que subam coisas la fora do padrao desejado (ex: dev desinstalou o pre commit na sua maquina, e subiu zoado)
+pra isso, tem que ter uma pasta no projeto chamada ".github", e dentro dela uma pasta "workflows". Dentro da pasta workflows, tem os arquivos com as configuracoes das action que deve ser feito a cada novo commit na main.
+---
